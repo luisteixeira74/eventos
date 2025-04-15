@@ -1,0 +1,46 @@
+# Event Dispatcher com Testify Suite
+
+Este projeto implementa um mecanismo de **Event Dispatcher (Despachante de Eventos)** em Go, com suporte a registro e gerenciamento de múltiplos handlers para eventos. A testagem é feita utilizando o poderoso recurso de **test suites do [Testify](https://github.com/stretchr/testify)**, permitindo testes mais organizados, reutilizáveis e legíveis.
+
+## Objetivo
+
+Demonstrar como aplicar o padrão de eventos em Go de forma simples e testável, utilizando a biblioteca `testify/suite` para:
+
+- Evitar duplicação de código nos testes.
+- Organizar os testes com setup automatizado.
+- Manter a coesão e clareza entre diferentes casos de teste.
+
+---
+
+## Estrutura
+
+### 📦 `EventDispatcher`
+
+Arquivo: `event_dispatcher.go`
+
+- Estrutura responsável por registrar, armazenar e limpar handlers associados a eventos.
+- Impede o registro duplicado de handlers para o mesmo evento.
+
+### 📦 `EventDispatcherTestSuite`
+
+Arquivo: `event_dispatcher_test.go`
+
+- Test suite baseada em `testify/suite`.
+- Inclui testes para:
+  - Registro de handlers.
+  - Registro duplicado (com erro esperado).
+  - Limpeza de todos os handlers (`Clear()`).
+
+
+## Executando os tests
+
+go test ./...
+
+### `RabbitMQ`
+
+docker-compose up -d
+
+RabbitMQ Web: `http://localhost:15672/`
+
+- login: guest
+- Passw: guest
