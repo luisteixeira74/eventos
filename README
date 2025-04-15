@@ -44,3 +44,40 @@ RabbitMQ Web: `http://localhost:15672/`
 
 - login: guest
 - Passw: guest
+
+## Considerações de Arquitetura
+
+### 🔁 Padrão de Projeto: Observer
+
+Este projeto aplica o **Observer Pattern (Padrão Observador)**, que define uma dependência "um-para-muitos" entre objetos:
+
+> "Quando um objeto muda de estado, todos os seus dependentes são notificados automaticamente."
+
+- O `EventDispatcher` atua como o **sujeito (subject)**.
+- Os handlers registrados são os **observadores (observers)**.
+- Ao executar `Dispatch(event)`, todos os handlers registrados para aquele tipo de evento são acionados.
+
+---
+
+### ✅ Princípios SOLID Aplicados
+
+Este projeto também reflete os princípios do SOLID:
+
+- **S — Single Responsibility Principle (SRP)**  
+  Cada componente tem responsabilidade única.  
+  O `EventDispatcher` apenas gerencia eventos e handlers, enquanto os handlers encapsulam a lógica de resposta.
+
+- **O — Open/Closed Principle (OCP)**  
+  O sistema é aberto para extensão, mas fechado para modificação.  
+  Novos handlers podem ser registrados sem alterar o código existente.
+
+- **L — Liskov Substitution Principle (LSP)**  
+  Todos os handlers implementam uma interface comum, podendo ser substituídos sem quebrar o funcionamento do dispatcher.
+
+- **I — Interface Segregation Principle (ISP)**  
+  A interface de handler é pequena e específica (`Handle(event)`), sem obrigar implementações desnecessárias.
+
+- **D — Dependency Inversion Principle (DIP)**  
+  O dispatcher depende de abstrações (`EventHandler`) e não de implementações concretas, promovendo baixo acoplamento e facilitando testes.
+
+---
