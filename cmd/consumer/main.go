@@ -12,9 +12,14 @@ func main() {
 	}
 	defer ch.Close()
 
+	// Setup
+	if err := rabbitmq.SetupRabbitMQ(ch); err != nil {
+		panic(err)
+	}
+
 	msgs := make(chan amqp.Delivery)
 
-	go rabbitmq.Consume(ch, msgs, "orders")
+	go rabbitmq.Consume(ch, msgs, rabbitmq.QueueName)
 
 	for msg := range msgs {
 		// Process the message
@@ -24,5 +29,4 @@ func main() {
 		// Acknowledge the message
 		msg.Ack(false)
 	}
-
 }

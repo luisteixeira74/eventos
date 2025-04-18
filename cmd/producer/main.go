@@ -9,5 +9,10 @@ func main() {
 	}
 	defer ch.Close()
 
-	rabbitmq.Publish(ch, "Hello World", "amq.direct")
+	// Setup
+	if err := rabbitmq.SetupRabbitMQ(ch); err != nil {
+		panic(err)
+	}
+
+	rabbitmq.Publish(ch, "Hello World", rabbitmq.ExchangeName, rabbitmq.RoutingKey)
 }
