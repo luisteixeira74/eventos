@@ -1,6 +1,9 @@
 # Event Dispatcher com Testify Suite
 
-Este projeto implementa um mecanismo de **Event Dispatcher (Despachante de Eventos)** em Go, com suporte a registro e gerenciamento de múltiplos handlers para eventos. A testagem é feita utilizando o poderoso recurso de **test suites do [Testify](https://github.com/stretchr/testify)**, permitindo testes mais organizados, reutilizáveis e legíveis.
+> 📌 Projeto de estudo e prática durante minha transição de stack PHP → Go.  
+> Neste repositório, exploro conceitos avançados como arquitetura de eventos, testes com `testify/suite`, integração com RabbitMQ e aplicação de princípios SOLID — tudo estruturado com foco em clareza e boas práticas para ambientes reais.
+
+Este projeto implementa um mecanismo de **Event Dispatcher** em Go, com suporte a registro e gerenciamento de múltiplos handlers para eventos usando RabbitMQ como Queue. A testagem é feita utilizando o poderoso recurso de **test suites do [Testify](https://github.com/stretchr/testify)**, permitindo testes mais organizados, reutilizáveis e legíveis.
 
 ## Objetivo
 
@@ -45,6 +48,8 @@ RabbitMQ Web: `http://localhost:15672/`
 - login: guest
 - Passw: guest
 
+[Criação da Fila e o Bind com Exchange é feito no setup.go]
+
 ## Considerações de Arquitetura
 
 ### 🔁 Padrão de Projeto: Observer
@@ -81,3 +86,13 @@ Este projeto também reflete os princípios do SOLID:
   O dispatcher depende de abstrações (`EventHandler`) e não de implementações concretas, promovendo baixo acoplamento e facilitando testes.
 
 ---
+
+## 🔭 Próximos passos
+
+- Adicionar testes de integração com RabbitMQ.
+- Separar lógica de handlers em microserviços distintos.
+- Implementar versionamento de eventos.
+- Criar integração com outros sistemas como notificações por e-mail ou logs estruturados.
+
+---
+

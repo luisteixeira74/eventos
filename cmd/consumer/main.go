@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/luisteixeira74/go-expert-eventos/internal/bootstrap"
+	"github.com/luisteixeira74/go-expert-eventos/pkg/events"
 	"github.com/luisteixeira74/go-expert-eventos/pkg/rabbitmq"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -21,10 +23,13 @@ func main() {
 
 	go rabbitmq.Consume(ch, msgs, rabbitmq.QueueName)
 
+	dispatcher := bootstrap.RegisterEventHandlers()
+
 	for msg := range msgs {
-		// Process the message
-		// For example, print the message body
-		println(string(msg.Body))
+		// Transformar o body em um Event real
+		event := events.NewEvent("UserCreated", string(msg.Body))
+
+		dispatcher.Dispatch(event) // handler executa a função com o payload
 
 		// Acknowledge the message
 		msg.Ack(false)

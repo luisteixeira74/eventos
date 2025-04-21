@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	ExchangeName = "notificacao.exchange"
+	ExchangeName = "user-create-exchange"
 	ExchangeType = "direct"
-	QueueName    = "notificacao.queue"
-	RoutingKey   = "enviar_notificacao"
+	QueueName    = "user-create-queue"
+	RoutingKey   = "UserCreate"
 )
 
 // SetupRabbitMQ cria a exchange, fila e binding necessários.
@@ -54,12 +54,4 @@ func SetupRabbitMQ(ch *amqp.Channel) error {
 
 	log.Println("Exchange, fila e binding configurados com sucesso!")
 	return nil
-}
-
-func GetRoutingKey() string {
-	return RoutingKey
-}
-
-func GetExchangeName() string {
-	return ExchangeName
 }

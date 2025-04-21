@@ -6,6 +6,7 @@ import (
 )
 
 var ErrHandlerAlreadyRegistered = errors.New("handler already registered for this event")
+var ErrNoHandlerRegistered = errors.New("no handler registered for this event")
 
 type EventDispatcher struct {
 	handlers map[string][]EventHandlerInterface
@@ -51,7 +52,7 @@ func (d *EventDispatcher) Dispatch(event EventInterface) error {
 		}
 		wg.Wait()
 	} else {
-		return errors.New("no handlers registered for this event")
+		return ErrNoHandlerRegistered
 	}
 	return nil
 }

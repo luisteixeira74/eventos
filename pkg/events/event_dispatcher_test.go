@@ -189,3 +189,68 @@ func (suite *EventDispatcherTestSuite) TestEventDispatch_Remove() {
 func TestSuite(t *testing.T) {
 	suite.Run(t, new(EventDispatcherTestSuite))
 }
+
+func (suite *EventDispatcherTestSuite) TestEventDispatch_HandlerProcessesPayloadCorrectly() {
+	mockHandler := new(MockEventHandler)
+	testPayload := "msg importante"
+
+	event := &TestEvent{
+		Name:    "EventoTeste",
+		PayLoad: testPayload,
+	}
+
+	mockHandler.On("Handle", event).Once()
+
+	suite.eventDispatcher.Register("EventoTeste", mockHandler)
+
+	err := suite.eventDispatcher.Dispatch(event)
+	suite.NoError(err)
+
+	mockHandler.AssertExpectations(suite.T())
+}
+
+func (suite *EventDispatcherTestSuite) TestEventDispatch_FromSimulatedMessage() {
+	mockHandler := new(MockEventHandler)
+
+	eventName := "EventoTeste"
+	payload := "payload do RabbitMQ"
+	event := &TestEvent{Name: eventName, PayLoad: payload}
+
+	mockHandler.On("Handle", event).Once()
+	suite.eventDispatcher.Register(eventName, mockHandler)
+
+	err := suite.eventDispatcher.Dispatch(event)
+	suite.NoError(err)
+
+	mockHandler.AssertExpectations(suite.T())
+}
+
+func (suite *EventDispatcherTestSuite) TestEventDispatch_NoHandlerRegistered() {
+	event := &TestEvent{
+		Name:    "EventoSemHandler",
+		PayLoad: "qualquer coisa",
+	}
+
+	err := suite.eventDispatcher.Dispatch(event)
+	suite.Error(err)
+	suite.Equal(ErrNoHandlerRegistered, err)
+}
+
+type SpyHandler struct {
+	LastPayload interface{}
+}
+
+func (s *SpyHandler) Handle(event EventInterface, wg *sync.WaitGroup) {
+	defer wg.Done()
+	s.LastPayload = event.GetPayLoad()
+}
+
+func (suite *EventDispatcherTestSuite) TestEventDispatch_WithRealHandlerLikeUpdateDB() {
+	spy := &SpyHandler{}
+	event := &TestEvent{Name: "EventoReal", PayLoad: "valor importante"}
+
+	suite.eventDispatcher.Register("EventoReal", spy)
+	suite.eventDispatcher.Dispatch(event)
+
+	suite.Equal("valor importante", spy.LastPayload)
+}
